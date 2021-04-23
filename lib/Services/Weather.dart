@@ -7,7 +7,7 @@ class Weather{
 
   Future<dynamic> getWeatherData() async{
     GetLocation getlocation = GetLocation();
-
+    await getlocation.getCurrentLocation();
     lati = getlocation.lat;
     longi = getlocation.long;
 

@@ -11,6 +11,7 @@ class GetLocation{
 
           lat=position.latitude;
           long = position.longitude;
+
      }
      catch(e){
        print(e);
