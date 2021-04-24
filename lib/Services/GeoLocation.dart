@@ -5,7 +5,7 @@ class GetLocation{
   double long;
 
   Future<void> getCurrentLocation() async
-  {
+  {  print("I am here");
      try{
           Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.medium);
 
@@ -15,6 +15,7 @@ class GetLocation{
      }
      catch(e){
        print(e);
+       print("I am having an error");
      }
   }
 }
