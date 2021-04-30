@@ -17,9 +17,9 @@ class _Loading_ScreenState extends State<Loading_Screen> {
   void geoLocation()async{
     Weather weather = Weather();
     var weatherData = await weather.getWeatherData();
-
+    var interData = await weather.getInterData();
     Navigator.push(context, MaterialPageRoute(builder: (context){
-      return Home(weatherData: weatherData);
+      return Home(weatherData: weatherData,interData:interData,);
     }));
   }
   @override

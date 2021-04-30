@@ -5,10 +5,12 @@ import 'package:mist/Services/Weather.dart';
 import 'package:mist/Utilities/ReusableCard.dart';
 import 'package:mist/Utilities/cardContent.dart';
 import 'package:mist/Utilities/constants.dart';
+import 'package:mist/Utilities/Report_today.dart';
 class Home extends StatefulWidget {
   final weatherData;
+  final interData;
 
-  const Home({this.weatherData});
+  const Home({this.weatherData,this.interData});
   @override
   _HomeState createState() => _HomeState();
 }
@@ -16,16 +18,24 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   String cityName;
   int temperature;
-  int condition;
+  int condition,pressure,humidity;
+  double windspeed;
+  double mintemp,maxtemp,feelslike;
+  double time_9 ,time_12,time_15, time_18,time_21,time_00;
   TabController _controller;
   @override
   void initState() {
     super.initState();
-    updateUI(widget.weatherData);
+    updateUI(widget.weatherData,widget.interData);
     _controller = TabController(length: 3, vsync: this);
   }
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+  }
 
-  void updateUI(dynamic weatherupdate){
+  void updateUI(dynamic weatherupdate , dynamic interupdate){
     if(weatherupdate==null)
       {
         temperature =0;
@@ -35,9 +45,21 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
      temperature=temp.toInt();
      cityName = weatherupdate['name'];
      condition=weatherupdate['weather'][0]['id'];
-     print(condition);
-     print(cityName);
+     windspeed=weatherupdate['wind']['speed'];
+     mintemp = weatherupdate['main']['temp_min'];
+     maxtemp = weatherupdate['main']['temp_max'];
+     pressure= weatherupdate['main']['pressure'];
+     humidity = weatherupdate['main']['humidity'];
+     feelslike = weatherupdate['main']['feels_like'];
 
+     // today list
+
+     time_9 = interupdate['list'][0]['main']['temp'];
+     time_12 = interupdate['list'][1]['main']['temp'];
+     time_15 =interupdate['list'][2]['main']['temp'];
+     time_18 = interupdate['list'][3]['main']['temp'];
+     time_21 = interupdate['list'][4]['main']['temp'];
+     time_00 = interupdate['list'][5]['main']['temp'];
   }
    Weather weather = Weather();
 
@@ -45,7 +67,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     var date = DateTime.now();
     String day = DateFormat('EEE, d MMMM').format(date);
-
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -76,31 +97,81 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 ChildWidget: Column(
                   children: [
                     Container(
-                      height: 67,
+                      height: 50,
                       child: TabBar(
 
                         controller: _controller,
-                        labelStyle: TextStyle(fontSize: 9),
+                        labelStyle: TextStyle(fontSize: 12),
                         labelPadding: EdgeInsets.only(top: 10,bottom: 10),
                         indicatorColor: Colors.white70,
 
                         tabs: [
                           Tab(
-                            icon: const Icon(Icons.home),
-                            text: 'Address',
+                            text: 'Todays Report',
                           ),
                           Tab(
-                            icon: const Icon(Icons.my_location),
-                            text: 'Location',
+                            text: 'Hourly Report',
                           ),
                           Tab(
-                            icon: const Icon(Icons.add),
-                            text: 'Add',
+                            text: 'Graphs',
                           )
 
                         ],
+
+                      ),
+
+                    ),
+                    Container(
+                      height: 370,
+                      child: TabBarView(
+                        controller: _controller,
+                        children: [
+                          ReusableCard(heigh: 370,color1: 0XFF0000,color2: 0Xff0000,
+                            ChildWidget: Report_today(feelslike: feelslike, mintemp: mintemp, maxtemp: maxtemp,
+                                                      windspeed: windspeed, humidity: humidity, pressure: pressure),),
+                          ReusableCard(heigh: 370,color1: 0XFF0000,color2: 0Xff0000,
+                            ChildWidget: ListView(
+                              children: [
+                                ListTile(
+                                  leading: Text("9:00 AM",style: TextStyle(color: Colors.white),),
+                                  title: Icon(Icons.thermostat_rounded,color: Colors.white,),
+                                  trailing: Text("$time_9",style: TextStyle(color: Colors.white),),
+                                ),
+                                ListTile(
+                                  leading: Text("12:00 PM",style: TextStyle(color: Colors.white),),
+                                  title: Icon(Icons.thermostat_rounded,color: Colors.white,),
+                                  trailing: Text("$time_12",style: TextStyle(color: Colors.white),),
+                                ),
+                                ListTile(
+                                  leading: Text("15:00 PM",style: TextStyle(color: Colors.white),),
+                                  title: Icon(Icons.thermostat_rounded,color: Colors.white,),
+                                  trailing: Text("$time_15",style: TextStyle(color: Colors.white),),
+                                ),
+                                ListTile(
+                                  leading: Text("18:00 PM",style: TextStyle(color: Colors.white),),
+                                  title: Icon(Icons.thermostat_rounded,color: Colors.white,),
+                                  trailing: Text("$time_18",style: TextStyle(color: Colors.white),),
+                                ),
+                                ListTile(
+                                  leading: Text("21:00 PM",style: TextStyle(color: Colors.white),),
+                                  title: Icon(Icons.thermostat_rounded,color: Colors.white,),
+                                  trailing: Text("$time_21",style: TextStyle(color: Colors.white),),
+                                ),
+                                ListTile(
+                                  leading: Text("00:00 AM",style: TextStyle(color: Colors.white),),
+                                  title: Icon(Icons.thermostat_rounded,color: Colors.white,),
+                                  trailing: Text("$time_00",style: TextStyle(color: Colors.white),),
+                                )
+
+                              ],
+                            ),
+                          ),
+
+                          ReusableCard(heigh: 370,color1: 0XFF0000,color2: 0Xff0000,)
+                        ],
                       ),
                     )
+
                   ],
                 )
 
@@ -113,4 +184,5 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     );
   }
 }
+
 

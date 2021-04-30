@@ -11,11 +11,36 @@ class Weather{
     lati = getlocation.lat;
     longi = getlocation.long;
 
+    print(lati);
+    print(longi);
+
     String url = "http://api.openweathermap.org/data/2.5/weather?lat=${lati}&lon=${longi}&appid=c42b2b792dad4b03c64d2298518ca661&units=metric";
 
     NetworkHelper networkHelper = NetworkHelper(url);
 
-    var weatherData = await networkHelper.getData();
+
+    var weatherData =
+    await networkHelper.getData();
+
+    return weatherData;
+
+  }
+  Future<dynamic> getInterData() async{
+    GetLocation getlocation = GetLocation();
+    await getlocation.getCurrentLocation();
+    lati = getlocation.lat;
+    longi = getlocation.long;
+
+    print(lati);
+    print(longi);
+
+    String url = "http://api.openweathermap.org/data/2.5/forecast?lat=$lati&lon=$longi&appid=c42b2b792dad4b03c64d2298518ca661&units=metric";
+
+    NetworkHelper networkHelper = NetworkHelper(url);
+
+
+    var weatherData =
+    await networkHelper.getData();
 
     return weatherData;
 
