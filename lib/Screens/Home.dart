@@ -6,6 +6,7 @@ import 'package:mist/Utilities/ReusableCard.dart';
 import 'package:mist/Utilities/cardContent.dart';
 import 'package:mist/Utilities/constants.dart';
 import 'package:mist/Utilities/Report_today.dart';
+import 'package:mist/Utilities/today_list.dart';
 class Home extends StatefulWidget {
   final weatherData;
   final interData;
@@ -27,7 +28,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   void initState() {
     super.initState();
     updateUI(widget.weatherData,widget.interData);
-    _controller = TabController(length: 3, vsync: this);
+    _controller = TabController(length: 2, vsync: this);
   }
   @override
   void dispose() {
@@ -67,6 +68,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     var date = DateTime.now();
     String day = DateFormat('EEE, d MMMM').format(date);
+
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -112,9 +114,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                           Tab(
                             text: 'Hourly Report',
                           ),
-                          Tab(
-                            text: 'Graphs',
-                          )
+
 
                         ],
 
@@ -130,44 +130,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                             ChildWidget: Report_today(feelslike: feelslike, mintemp: mintemp, maxtemp: maxtemp,
                                                       windspeed: windspeed, humidity: humidity, pressure: pressure),),
                           ReusableCard(heigh: 370,color1: 0XFF0000,color2: 0Xff0000,
-                            ChildWidget: ListView(
-                              children: [
-                                ListTile(
-                                  leading: Text("9:00 AM",style: TextStyle(color: Colors.white),),
-                                  title: Icon(Icons.thermostat_rounded,color: Colors.white,),
-                                  trailing: Text("$time_9",style: TextStyle(color: Colors.white),),
-                                ),
-                                ListTile(
-                                  leading: Text("12:00 PM",style: TextStyle(color: Colors.white),),
-                                  title: Icon(Icons.thermostat_rounded,color: Colors.white,),
-                                  trailing: Text("$time_12",style: TextStyle(color: Colors.white),),
-                                ),
-                                ListTile(
-                                  leading: Text("15:00 PM",style: TextStyle(color: Colors.white),),
-                                  title: Icon(Icons.thermostat_rounded,color: Colors.white,),
-                                  trailing: Text("$time_15",style: TextStyle(color: Colors.white),),
-                                ),
-                                ListTile(
-                                  leading: Text("18:00 PM",style: TextStyle(color: Colors.white),),
-                                  title: Icon(Icons.thermostat_rounded,color: Colors.white,),
-                                  trailing: Text("$time_18",style: TextStyle(color: Colors.white),),
-                                ),
-                                ListTile(
-                                  leading: Text("21:00 PM",style: TextStyle(color: Colors.white),),
-                                  title: Icon(Icons.thermostat_rounded,color: Colors.white,),
-                                  trailing: Text("$time_21",style: TextStyle(color: Colors.white),),
-                                ),
-                                ListTile(
-                                  leading: Text("00:00 AM",style: TextStyle(color: Colors.white),),
-                                  title: Icon(Icons.thermostat_rounded,color: Colors.white,),
-                                  trailing: Text("$time_00",style: TextStyle(color: Colors.white),),
-                                )
-
-                              ],
-                            ),
+                            ChildWidget: Hourly(time_9: time_9, time_12: time_12, time_15: time_15, time_18: time_18,
+                                                time_21: time_21, time_00: time_00),
                           ),
-
-                          ReusableCard(heigh: 370,color1: 0XFF0000,color2: 0Xff0000,)
                         ],
                       ),
                     )
@@ -184,5 +149,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     );
   }
 }
+
 
 
