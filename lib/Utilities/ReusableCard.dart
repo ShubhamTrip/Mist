@@ -10,12 +10,11 @@ class ReusableCard extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return Container(
-      margin: EdgeInsets.only(top: 100),
+      margin: EdgeInsets.only(left: 10,right: 10,top: 20),
       height: heigh,
-      width: 320,
       decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(16),
           gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
