@@ -46,6 +46,26 @@ class Weather{
 
   }
 
+  Future<dynamic> getCityData(String city) async{
+    String url= "http://api.openweathermap.org/data/2.5/weather?q=$city&appid=c42b2b792dad4b03c64d2298518ca661&units=metric";
+    NetworkHelper networkHelper = NetworkHelper(url);
+
+
+    var weatherData =
+    await networkHelper.getData();
+
+    return weatherData;
+  }
+  Future<dynamic> getCityinterData(String city) async{
+    String url= "http://api.openweathermap.org/data/2.5/forecast?q=$city&appid=c42b2b792dad4b03c64d2298518ca661&units=metric";
+    NetworkHelper networkHelper = NetworkHelper(url);
+
+
+    var weatherData =
+    await networkHelper.getData();
+
+    return weatherData;
+  }
   String getWeatherIcon(int condition) {
     if (condition < 300) {
       return '🌩';

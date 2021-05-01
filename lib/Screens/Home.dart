@@ -10,7 +10,6 @@ import 'package:mist/Utilities/today_list.dart';
 class Home extends StatefulWidget {
   final weatherData;
   final interData;
-
   const Home({this.weatherData,this.interData});
   @override
   _HomeState createState() => _HomeState();
@@ -18,6 +17,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   String cityName;
+  String typedName;
   int temperature;
   int condition,pressure,humidity;
   double windspeed;
@@ -62,6 +62,40 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
      time_21 = interupdate['list'][4]['main']['temp'];
      time_00 = interupdate['list'][5]['main']['temp'];
   }
+  Future<dynamic> getCityData(String city)async
+  {
+    Weather weather = Weather();
+    var data = await weather.getCityData(city);
+    var interdata = await weather.getCityinterData(city);
+    updateCity(data,interdata);
+  }
+  void updateCity(dynamic cityupdate,dynamic interupdate){
+    if(cityupdate==null)
+    {
+      temperature =0;
+      return;
+    }
+    var temp = cityupdate['main']['temp'];
+    temperature=temp.toInt();
+    cityName = cityupdate['name'];
+    condition=cityupdate['weather'][0]['id'];
+    windspeed=cityupdate['wind']['speed'];
+    mintemp = cityupdate['main']['temp_min'];
+    maxtemp = cityupdate['main']['temp_max'];
+    pressure= cityupdate['main']['pressure'];
+    humidity = cityupdate['main']['humidity'];
+    feelslike = cityupdate['main']['feels_like'];
+
+    // today list
+
+    time_9 = interupdate['list'][0]['main']['temp'];
+    time_12 = interupdate['list'][1]['main']['temp'];
+    time_15 =interupdate['list'][2]['main']['temp'];
+    time_18 = interupdate['list'][3]['main']['temp'];
+    time_21 = interupdate['list'][4]['main']['temp'];
+    time_00 = interupdate['list'][5]['main']['temp'];
+  }
+
    Weather weather = Weather();
 
   @override
@@ -94,7 +128,27 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                ReusableCard(heigh: 100,color1: 0XFF003973,color2: 0XFFBDDCF8,
                ChildWidget: weatherCard(temperature: temperature, day: day, cityName: cityName, condition: condition),
                ),
-               Container(child: TextField(decoration: kTextFieldInputDecoration),margin: EdgeInsets.only(left: 15,right: 15,top: 20),),
+               Container(child: Row(
+                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                 children: [
+                   Container(child: TextField(
+                     decoration: kTextFieldInputDecoration,
+               onChanged: (value){
+               typedName = value;
+               },
+               ), width: 500),
+                   IconButton(icon: Icon(Icons.search), onPressed: ()async{
+                     if(typedName != null) {
+
+                      setState(() {
+                        getCityData(typedName);
+                      });
+
+                     }
+                   })
+                 ],
+               ),margin: EdgeInsets.only(left: 15,right: 15,top: 20),
+               decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10)),),
                ReusableCard(heigh: 420,color1: 0XFF003973,color2: 0XFF348F50,
                 ChildWidget: Column(
                   children: [
@@ -114,7 +168,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                           Tab(
                             text: 'Hourly Report',
                           ),
-
 
                         ],
 
